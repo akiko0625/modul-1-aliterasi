@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kedai Bunyi Awal - Modul Aliterasi Bahasa Melayu</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Inter & Fredoka for Kid-friendly feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fredoka', 'Inter', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* Highlight visual effects yang lebih jelas */
+        .card-highlight {
+            outline: 6px solid #22c55e !important;
+            outline-offset: 4px;
+            box-shadow: 0 0 30px rgba(34, 197, 94, 0.7) !important;
+            transform: scale(1.06) !important;
+            animation: matchPulse 1s ease-in-out infinite alternate;
+            z-index: 20;
+        }
+
+        @keyframes matchPulse {
+            0% { transform: scale(1.04); }
+            100% { transform: scale(1.08); }
+        }
+
+        .card-active {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        /* Latar Belakang Ceria Kanak-Kanak */
+        .playful-bg {
+            background-color: #e0f2fe;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(253, 224, 71, 0.45) 0%, transparent 20%),
+                radial-gradient(circle at 90% 15%, rgba(244, 114, 182, 0.35) 0%, transparent 25%),
+                radial-gradient(circle at 85% 80%, rgba(52, 211, 153, 0.35) 0%, transparent 25%),
+                radial-gradient(circle at 15% 85%, rgba(147, 197, 253, 0.45) 0%, transparent 25%),
+                radial-gradient(circle at 50% 50%, rgba(251, 146, 60, 0.18) 0%, transparent 40%);
+        }
+
+        /* Animasi Elemen Terapung di Latar Belakang */
+        .float-slow {
+            animation: floatSlow 6s ease-in-out infinite;
+        }
+
+        .float-reverse {
+            animation: floatReverse 7s ease-in-out infinite;
+        }
+
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(4deg); }
+        }
+
+        @keyframes floatReverse {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(12px) rotate(-4deg); }
+        }
+
+        /* Pop animation for reveals */
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            80% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-pop {
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800 playful-bg relative overflow-x-hidden">
+
+    <!-- Elemen Hiasan Latar Belakang Ceria (Stars, Clouds, Bubbles) -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none" aria-hidden="true">
+        <div class="absolute -top-6 -left-6 text-7xl opacity-40 float-slow">☁️</div>
+        <div class="absolute top-20 left-10 text-4xl opacity-60 float-reverse">⭐</div>
+        <div class="absolute top-44 left-4 text-3xl opacity-50 float-slow">🎈</div>
+        <div class="absolute top-4 right-12 text-5xl opacity-50 float-reverse">🌟</div>
+        <div class="absolute top-28 right-4 text-7xl opacity-40 float-slow">☁️</div>
+        <div class="absolute bottom-20 left-8 text-5xl opacity-40 float-reverse">🎨</div>
+        <div class="absolute bottom-16 right-10 text-6xl opacity-40 float-slow">🌈</div>
+        <div class="absolute bottom-36 right-24 text-3xl opacity-50 float-reverse">✨</div>
+    </div>
+
+    <!-- Header / Tajuk Utama -->
+    <header class="bg-white/90 backdrop-blur-md border-b-4 border-amber-400 py-3 px-6 shadow-md sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 bg-amber-400 rounded-2xl flex items-center justify-center text-2xl shadow-inner border-2 border-amber-500">
+                    🏪
+                </div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-amber-900 tracking-wide">Kedai Bunyi Awal</h1>
+                    <p class="text-xs md:text-sm font-semibold text-amber-700">Modul Aliterasi • Sesi 1: Pengenalan Bunyi Awal</p>
+                </div>
+            </div>
+
+            <!-- Petunjuk Langkah Navigasi -->
+            <div class="hidden sm:flex items-center gap-2 bg-amber-50 px-4 py-2 rounded-2xl border border-amber-200">
+                <span id="step-indicator-1" class="w-8 h-8 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center text-sm shadow">1</span>
+                <span class="text-slate-300 font-bold">—</span>
+                <span id="step-indicator-2" class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm">2</span>
+                <span class="text-slate-300 font-bold">—</span>
+                <span id="step-indicator-3" class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm">3</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Kandungan Utama (Main Container) -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow flex flex-col justify-center w-full z-10 relative">
+
+        <!-- ================= FASA 1: KENALI EMPAT BARANG ================= -->
+        <section id="step-1" class="step-content space-y-6">
+            <div class="text-center max-w-2xl mx-auto bg-white/70 backdrop-blur-sm p-4 rounded-3xl border-2 border-amber-200 shadow-sm">
+                <span class="bg-amber-400 text-amber-950 font-bold text-sm px-4 py-1 rounded-full uppercase tracking-wide border border-amber-500 shadow-sm">Langkah 1</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mt-2">Mari Kenali Barang!</h2>
+                <p class="text-slate-700 text-lg mt-1 font-semibold">Buka kotak misteri dan ketuk gambar untuk mendengar namanya.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[340px] items-center">
+                <!-- Slot 1: Beg -->
+                <div class="flex flex-col items-center">
+                    <div id="box-beg" class="w-full h-72 bg-gradient-to-b from-amber-300 to-amber-400 border-4 border-amber-500 rounded-3xl flex flex-col items-center justify-center shadow-lg transition-all duration-300">
+                        <span class="text-7xl mb-3 transform hover:scale-110 transition">🎁</span>
+                        <span class="font-bold text-amber-950 text-xl">Kotak 1</span>
+                    </div>
+                    <div id="card-beg-1" class="hidden w-full h-72 bg-white border-4 border-amber-300 rounded-3xl p-4 flex flex-col items-center justify-between shadow-xl cursor-pointer transition hover:border-amber-500 group animate-pop" onclick="playAudio('beg')">
+                        <div class="w-full h-48 flex items-center justify-center overflow-hidden">
+                            <img src="https://i.ibb.co/k23rsxLJ/Cheerful-red-school-backpack.png" alt="Beg Sekolah" class="max-h-full max-w-full object-contain group-hover:scale-105 transition" onerror="this.onerror=null; this.src='https://placehold.co/200x200/ef4444/ffffff?text=Beg';">
+                        </div>
+                        <button class="w-full py-2 bg-amber-100 group-hover:bg-amber-400 text-amber-900 rounded-2xl flex items-center justify-center gap-2 font-bold text-lg transition border border-amber-300">
+                            🔊 Dengar Bunyi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Slot 2: Buku -->
+                <div class="flex flex-col items-center">
+                    <div id="box-buku" class="w-full h-72 bg-gradient-to-b from-blue-300 to-blue-400 border-4 border-blue-500 rounded-3xl flex flex-col items-center justify-center shadow-lg transition-all duration-300">
+                        <span class="text-7xl mb-3 transform hover:scale-110 transition">🎁</span>
+                        <span class="font-bold text-blue-950 text-xl">Kotak 2</span>
+                    </div>
+                    <div id="card-buku-1" class="hidden w-full h-72 bg-white border-4 border-blue-300 rounded-3xl p-4 flex flex-col items-center justify-between shadow-xl cursor-pointer transition hover:border-blue-500 group animate-pop" onclick="playAudio('buku')">
+                        <div class="w-full h-48 flex items-center justify-center overflow-hidden">
+                            <img src="https://i.ibb.co/Q7SvNDP0/Blue-Hardcover-Book.png" alt="Buku Biru" class="max-h-full max-w-full object-contain group-hover:scale-105 transition" onerror="this.onerror=null; this.src='https://placehold.co/200x200/3b82f6/ffffff?text=Buku';">
+                        </div>
+                        <button class="w-full py-2 bg-blue-100 group-hover:bg-blue-400 text-blue-900 rounded-2xl flex items-center justify-center gap-2 font-bold text-lg transition border border-blue-300">
+                            🔊 Dengar Bunyi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Slot 3: Kipas -->
+                <div class="flex flex-col items-center">
+                    <div id="box-kipas" class="w-full h-72 bg-gradient-to-b from-teal-300 to-teal-400 border-4 border-teal-500 rounded-3xl flex flex-col items-center justify-center shadow-lg transition-all duration-300">
+                        <span class="text-7xl mb-3 transform hover:scale-110 transition">🎁</span>
+                        <span class="font-bold text-teal-950 text-xl">Kotak 3</span>
+                    </div>
+                    <div id="card-kipas-1" class="hidden w-full h-72 bg-white border-4 border-teal-300 rounded-3xl p-4 flex flex-col items-center justify-between shadow-xl cursor-pointer transition hover:border-teal-500 group animate-pop" onclick="playAudio('kipas')">
+                        <div class="w-full h-48 flex items-center justify-center overflow-hidden">
+                            <img src="https://i.ibb.co/h1dYLPdw/Cheerful-turquoise-tabletop-fan.png" alt="Kipas Meja Turquoise" class="max-h-full max-w-full object-contain group-hover:scale-105 transition" onerror="this.onerror=null; this.src='https://placehold.co/200x200/14b8a6/ffffff?text=Kipas';">
+                        </div>
+                        <button class="w-full py-2 bg-teal-100 group-hover:bg-teal-400 text-teal-900 rounded-2xl flex items-center justify-center gap-2 font-bold text-lg transition border border-teal-300">
+                            🔊 Dengar Bunyi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Slot 4: Kerusi -->
+                <div class="flex flex-col items-center">
+                    <div id="box-kerusi" class="w-full h-72 bg-gradient-to-b from-orange-300 to-orange-400 border-4 border-orange-500 rounded-3xl flex flex-col items-center justify-center shadow-lg transition-all duration-300">
+                        <span class="text-7xl mb-3 transform hover:scale-110 transition">🎁</span>
+                        <span class="font-bold text-orange-950 text-xl">Kotak 4</span>
+                    </div>
+                    <div id="card-kerusi-1" class="hidden w-full h-72 bg-white border-4 border-orange-300 rounded-3xl p-4 flex flex-col items-center justify-between shadow-xl cursor-pointer transition hover:border-orange-500 group animate-pop" onclick="playAudio('kerusi')">
+                        <div class="w-full h-48 flex items-center justify-center overflow-hidden">
+                            <img src="https://i.ibb.co/Cp690w42/Cheerful-orange-preschool-chair.png" alt="Kerusi Prasekolah Oren" class="max-h-full max-w-full object-contain group-hover:scale-105 transition" onerror="this.onerror=null; this.src='https://placehold.co/200x200/f97316/ffffff?text=Kerusi';">
+                        </div>
+                        <button class="w-full py-2 bg-orange-100 group-hover:bg-orange-400 text-orange-900 rounded-2xl flex items-center justify-center gap-2 font-bold text-lg transition border border-orange-300">
+                            🔊 Dengar Bunyi
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Button Step 1 -->
+            <div class="flex justify-center pt-2">
+                <button id="btn-reveal" onclick="revealNextItem()" class="px-8 py-4 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-amber-950 font-extrabold text-2xl rounded-3xl shadow-lg transform hover:-translate-y-1 active:translate-y-0 transition border-b-4 border-amber-700 flex items-center gap-3">
+                    <span>✨</span>
+                    <span>Lihat Barang</span>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= FASA 2: LIHAT CARA CIKGU ================= -->
+        <section id="step-2" class="step-content hidden space-y-6">
+            <div class="text-center max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-4 rounded-3xl border-2 border-blue-200 shadow-sm">
+                <span class="bg-blue-400 text-blue-950 font-bold text-sm px-4 py-1 rounded-full uppercase tracking-wide border border-blue-500 shadow-sm">Langkah 2</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mt-2">Lihat Cara Cikgu</h2>
+                <p class="text-slate-700 text-lg mt-1 font-semibold">Cari barang yang bermula dengan bunyi yang sama seperti <strong class="text-blue-600 underline">beg</strong>.</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- Beg (Kad Pesanan Target) -->
+                <div id="step2-card-beg" class="relative bg-white border-4 border-blue-500 rounded-3xl p-3 md:p-4 flex flex-col items-center justify-between shadow-xl cursor-pointer transition hover:scale-105" onclick="playAudio('beg')">
+                    <span class="absolute -top-4 bg-blue-600 text-white font-bold text-xs md:text-sm px-3 py-1 rounded-full border-2 border-white shadow-md">
+                        📋 Kad Pesanan
+                    </span>
+                    <div class="w-full h-40 md:h-48 flex items-center justify-center overflow-hidden mt-2">
+                        <img src="https://i.ibb.co/k23rsxLJ/Cheerful-red-school-backpack.png" alt="Beg Sekolah" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/ef4444/ffffff?text=Beg';">
+                    </div>
+                    <button class="w-full py-2 bg-blue-100 hover:bg-blue-300 text-blue-900 rounded-2xl flex items-center justify-center gap-1 md:gap-2 font-bold text-base md:text-lg transition border border-blue-300 mt-2">
+                        🔊 Dengar
+                    </button>
+                </div>
+
+                <!-- Buku -->
+                <div id="step2-card-buku" class="bg-white border-4 border-slate-200 rounded-3xl p-3 md:p-4 flex flex-col items-center justify-between shadow-md cursor-pointer transition hover:scale-105" onclick="playAudio('buku')">
+                    <div class="w-full h-40 md:h-48 flex items-center justify-center overflow-hidden">
+                        <img src="https://i.ibb.co/Q7SvNDP0/Blue-Hardcover-Book.png" alt="Buku Biru" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/3b82f6/ffffff?text=Buku';">
+                    </div>
+                    <button class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl flex items-center justify-center gap-1 md:gap-2 font-bold text-base md:text-lg transition border border-slate-300 mt-2">
+                        🔊 Dengar
+                    </button>
+                </div>
+
+                <!-- Kipas -->
+                <div id="step2-card-kipas" class="bg-white border-4 border-slate-200 rounded-3xl p-3 md:p-4 flex flex-col items-center justify-between shadow-md cursor-pointer transition hover:scale-105 opacity-80" onclick="playAudio('kipas')">
+                    <div class="w-full h-40 md:h-48 flex items-center justify-center overflow-hidden">
+                        <img src="https://i.ibb.co/h1dYLPdw/Cheerful-turquoise-tabletop-fan.png" alt="Kipas Meja Turquoise" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/14b8a6/ffffff?text=Kipas';">
+                    </div>
+                    <button class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl flex items-center justify-center gap-1 md:gap-2 font-bold text-base md:text-lg transition border border-slate-300 mt-2">
+                        🔊 Dengar
+                    </button>
+                </div>
+
+                <!-- Kerusi -->
+                <div id="step2-card-kerusi" class="bg-white border-4 border-slate-200 rounded-3xl p-3 md:p-4 flex flex-col items-center justify-between shadow-md cursor-pointer transition hover:scale-105 opacity-80" onclick="playAudio('kerusi')">
+                    <div class="w-full h-40 md:h-48 flex items-center justify-center overflow-hidden">
+                        <img src="https://i.ibb.co/Cp690w42/Cheerful-orange-preschool-chair.png" alt="Kerusi Prasekolah Oren" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/f97316/ffffff?text=Kerusi';">
+                    </div>
+                    <button class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl flex items-center justify-center gap-1 md:gap-2 font-bold text-base md:text-lg transition border border-slate-300 mt-2">
+                        🔊 Dengar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Button Step 2 -->
+            <div class="flex justify-center pt-2">
+                <button id="btn-match-2" onclick="showMatchStep2()" class="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-extrabold text-2xl rounded-3xl shadow-lg transform hover:-translate-y-1 active:translate-y-0 transition border-b-4 border-indigo-900 flex items-center gap-3">
+                    <span>🔍</span>
+                    <span>Tunjukkan Padanan</span>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- ================= FASA 3: CUBA BERSAMA ================= -->
+        <section id="step-3" class="step-content hidden space-y-6">
+            <div class="text-center max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-4 rounded-3xl border-2 border-emerald-200 shadow-sm">
+                <span class="bg-emerald-400 text-emerald-950 font-bold text-sm px-4 py-1 rounded-full uppercase tracking-wide border border-emerald-500 shadow-sm">Langkah 3</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-800 mt-2">Mari Cuba Bersama!</h2>
+                <p class="text-emerald-800 text-xl mt-1 font-bold">“Yang mana bermula dengan bunyi yang sama seperti <u class="underline-offset-4">kipas</u>?”</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                <!-- Beg -->
+                <div id="step3-card-beg" class="bg-white border-4 border-slate-200 rounded-3xl p-3 md:p-4 flex flex-col items-center justify-between shadow-md cursor-pointer transition hover:scale-105 opacity-80" onclick="playAudio('beg')">
+                    <div class="w-full h-40 md:h-48 flex items-center justify-center overflow-hidden">
+                        <img src="https://i.ibb.co/k23rsxLJ/Cheerful-red-school-backpack.png" alt="Beg Sekolah" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/ef4444/ffffff?text=Beg';">
+                    </div>
+                    <button class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl flex items-center justify-center gap-1 md:gap-2 font-bold text-base md:text-lg transition border border-slate-300 mt-2">
+                        🔊 Dengar
+                    </button>
+                </div>
+
+                <!-- Buku -->
+                <div id="step3-card-buku" class="bg-white border-4 border-slate-200 rounded-3xl p-3 md:p-4 flex flex-col items-center justify-between shadow-md cursor-pointer transition hover:scale-105 opacity-80" onclick="playAudio('buku')">
+                    <div class="w-full h-40 md:h-48 flex items-center justify-center overflow-hidden">
+                        <img src="https://i.ibb.co/Q7SvNDP0/Blue-Hardcover-Book.png" alt="Buku Biru" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/3b82f6/ffffff?text=Buku';">
+                    </div>
+                    <button class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl flex items-center justify-center gap-1 md:gap-2 font-bold text-base md:text-lg transition border border-slate-300 mt-2">
+                        🔊 Dengar
+                    </button>
+                </div>
+
+                <!-- Kipas (Kad Pesanan Target) -->
+                <div id="step3-card-kipas" class="relative bg-white border-4 border-emerald-500 rounded-3xl p-3 md:p-4 flex flex-col items-center justify-between shadow-xl cursor-pointer transition hover:scale-105" onclick="playAudio('kipas')">
+                    <span class="absolute -top-4 bg-emerald-600 text-white font-bold text-xs md:text-sm px-3 py-1 rounded-full border-2 border-white shadow-md">
+                        📋 Kad Pesanan
+                    </span>
+                    <div class="w-full h-40 md:h-48 flex items-center justify-center overflow-hidden mt-2">
+                        <img src="https://i.ibb.co/h1dYLPdw/Cheerful-turquoise-tabletop-fan.png" alt="Kipas Meja Turquoise" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/14b8a6/ffffff?text=Kipas';">
+                    </div>
+                    <button class="w-full py-2 bg-emerald-100 hover:bg-emerald-300 text-emerald-900 rounded-2xl flex items-center justify-center gap-1 md:gap-2 font-bold text-base md:text-lg transition border border-emerald-300 mt-2">
+                        🔊 Dengar
+                    </button>
+                </div>
+
+                <!-- Kerusi -->
+                <div id="step3-card-kerusi" class="bg-white border-4 border-slate-200 rounded-3xl p-3 md:p-4 flex flex-col items-center justify-between shadow-md cursor-pointer transition hover:scale-105" onclick="playAudio('kerusi')">
+                    <div class="w-full h-40 md:h-48 flex items-center justify-center overflow-hidden">
+                        <img src="https://i.ibb.co/Cp690w42/Cheerful-orange-preschool-chair.png" alt="Kerusi Prasekolah Oren" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x200/f97316/ffffff?text=Kerusi';">
+                    </div>
+                    <button class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-2xl flex items-center justify-center gap-1 md:gap-2 font-bold text-base md:text-lg transition border border-slate-300 mt-2">
+                        🔊 Dengar
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Button Step 3 -->
+            <div class="flex justify-center pt-2">
+                <button id="btn-match-3" onclick="showMatchStep3()" class="px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-2xl rounded-3xl shadow-lg transform hover:-translate-y-1 active:translate-y-0 transition border-b-4 border-teal-900 flex items-center gap-3">
+                    <span>🔍</span>
+                    <span>Tunjukkan Padanan</span>
+                </button>
+            </div>
+
+            <!-- Panduan 4 Langkah Berpandu -->
+            <div id="guided-steps" class="hidden mt-6 bg-emerald-50 border-2 border-emerald-300 p-5 rounded-3xl shadow-sm text-center animate-pop">
+                <h3 class="font-extrabold text-emerald-950 text-xl mb-3">Langkah Permainan Meja Murid:</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm md:text-base font-bold text-emerald-900">
+                    <div class="bg-white p-3 rounded-2xl border border-emerald-200 shadow-sm flex flex-col items-center">
+                        <span class="text-2xl mb-1">1️⃣</span>
+                        <span>Pilih kad</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-emerald-200 shadow-sm flex flex-col items-center">
+                        <span class="text-2xl mb-1">2️⃣</span>
+                        <span>Dengar bunyi</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-emerald-200 shadow-sm flex flex-col items-center">
+                        <span class="text-2xl mb-1">3️⃣</span>
+                        <span>Cari pasangan</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-emerald-200 shadow-sm flex flex-col items-center">
+                        <span class="text-2xl mb-1">4️⃣</span>
+                        <span>Beri giliran</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer / Navigasi Guru -->
+    <footer class="bg-white/95 backdrop-blur border-t-2 border-slate-200 py-4 px-6 shadow-lg z-50 relative">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <!-- Butang Kembali -->
+            <button id="btn-back" onclick="changeStep(currentStep - 1)" class="px-5 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-lg rounded-2xl transition flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+                <span>⬅️</span>
+                <span>Kembali</span>
+            </button>
+
+            <!-- Butang Mula Semula -->
+            <button onclick="resetApp()" class="px-5 py-3 bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-lg rounded-2xl transition border border-rose-300 flex items-center gap-2 shadow-sm">
+                <span>🔄</span>
+                <span class="hidden sm:inline">Mula Semula</span>
+            </button>
+
+            <!-- Butang Seterusnya -->
+            <button id="btn-next" onclick="changeStep(currentStep + 1)" class="px-6 py-3 bg-amber-400 hover:bg-amber-500 text-amber-950 font-extrabold text-lg rounded-2xl transition flex items-center gap-2 shadow-md border-b-2 border-amber-600">
+                <span>Seterusnya</span>
+                <span>➡️</span>
+            </button>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // State Management
+        let currentStep = 1;
+        let revealIndex = 0;
+        const revealOrder = ['beg', 'buku', 'kipas', 'kerusi'];
+        
+        // Audio Objects Mapping
+        const audioFiles = {
+            'beg': 'https://res.cloudinary.com/mvtudksw/video/upload/v1795011415/beg.mp3',
+            'buku': 'https://res.cloudinary.com/mvtudksw/video/upload/v1795011415/buku.mp3',
+            'kipas': 'https://res.cloudinary.com/mvtudksw/video/upload/v1795011415/kipas.mp3',
+            'kerusi': 'https://res.cloudinary.com/mvtudksw/video/upload/v1795011415/kerusi.mp3'
+        };
+
+        const audioObjects = {};
+        let currentPlayingAudio = null;
+
+        // Preload Audio Elements safely
+        Object.keys(audioFiles).forEach(key => {
+            const audio = new Audio();
+            audio.src = audioFiles[key];
+            audioObjects[key] = audio;
+        });
+
+        // Function to play sound with complete fallback and reset capability
+        function playAudio(itemKey) {
+            // Stop any currently playing audio
+            if (currentPlayingAudio) {
+                currentPlayingAudio.pause();
+                currentPlayingAudio.currentTime = 0;
+            }
+
+            const targetAudio = audioObjects[itemKey];
+
+            if (targetAudio) {
+                targetAudio.currentTime = 0;
+                targetAudio.play().then(() => {
+                    currentPlayingAudio = targetAudio;
+                }).catch(error => {
+                    console.log(`Audio file for ${itemKey} (${audioFiles[itemKey]}) not available yet or blocked by browser policy. Teacher can articulate orally.`);
+                });
+            }
+        }
+
+        // Reveal Item in Step 1 (Kotak Misteri)
+        function revealNextItem() {
+            if (revealIndex < revealOrder.length) {
+                const item = revealOrder[revealIndex];
+                const boxElement = document.getElementById(`box-${item}`);
+                const cardElement = document.getElementById(`card-${item}-1`);
+
+                if (boxElement && cardElement) {
+                    boxElement.classList.add('hidden');
+                    cardElement.classList.remove('hidden');
+                    playAudio(item);
+                }
+
+                revealIndex++;
+
+                if (revealIndex >= revealOrder.length) {
+                    const btnReveal = document.getElementById('btn-reveal');
+                    btnReveal.disabled = true;
+                    btnReveal.classList.add('opacity-50', 'cursor-not-allowed');
+                    btnReveal.innerHTML = '<span>✅</span><span>Semua Barang Didedahkan</span>';
+                }
+            }
+        }
+
+        // Show Matching for Step 2 (Beg - Buku)
+        function showMatchStep2() {
+            const begCard = document.getElementById('step2-card-beg');
+            const bukuCard = document.getElementById('step2-card-buku');
+
+            if (begCard && bukuCard) {
+                begCard.classList.add('card-highlight');
+                bukuCard.classList.add('card-highlight');
+
+                // Hilangkan opacity rendah jika ada
+                begCard.classList.remove('opacity-80');
+                bukuCard.classList.remove('opacity-80');
+            }
+
+            // Play first audio pair
+            playAudio('beg');
+            setTimeout(() => {
+                playAudio('buku');
+            }, 1200);
+        }
+
+        // Show Matching for Step 3 (Kipas - Kerusi)
+        function showMatchStep3() {
+            const kipasCard = document.getElementById('step3-card-kipas');
+            const kerusiCard = document.getElementById('step3-card-kerusi');
+
+            if (kipasCard && kerusiCard) {
+                kipasCard.classList.add('card-highlight');
+                kerusiCard.classList.add('card-highlight');
+
+                // Hilangkan opacity rendah jika ada
+                kipasCard.classList.remove('opacity-80');
+                kerusiCard.classList.remove('opacity-80');
+            }
+
+            // Show 4 Guided Steps for classroom activity
+            const guidedSteps = document.getElementById('guided-steps');
+            if (guidedSteps) {
+                guidedSteps.classList.remove('hidden');
+            }
+
+            // Play target audio pair
+            playAudio('kipas');
+            setTimeout(() => {
+                playAudio('kerusi');
+            }, 1200);
+        }
+
+        // Step Navigation Logic
+        function changeStep(newStep) {
+            if (newStep < 1 || newStep > 3) return;
+
+            // Hide all content sections
+            document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+
+            // Show selected step
+            document.getElementById(`step-${newStep}`).classList.remove('hidden');
+
+            currentStep = newStep;
+            updateUI();
+        }
+
+        // Update Nav UI Indicators & Buttons
+        function updateUI() {
+            // Update Footer Buttons
+            const btnBack = document.getElementById('btn-back');
+            const btnNext = document.getElementById('btn-next');
+
+            btnBack.disabled = (currentStep === 1);
+            btnNext.disabled = (currentStep === 3);
+
+            if (currentStep === 3) {
+                btnNext.classList.add('opacity-40', 'cursor-not-allowed');
+            } else {
+                btnNext.classList.remove('opacity-40', 'cursor-not-allowed');
+            }
+
+            // Update Header Dots
+            for (let i = 1; i <= 3; i++) {
+                const indicator = document.getElementById(`step-indicator-${i}`);
+                if (i === currentStep) {
+                    indicator.className = "w-8 h-8 rounded-full bg-amber-500 text-white font-bold flex items-center justify-center text-sm shadow ring-2 ring-amber-300";
+                } else if (i < currentStep) {
+                    indicator.className = "w-8 h-8 rounded-full bg-emerald-500 text-white font-bold flex items-center justify-center text-sm";
+                } else {
+                    indicator.className = "w-8 h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-sm";
+                }
+            }
+        }
+
+        // Full Reset
+        function resetApp() {
+            // Stop audio
+            if (currentPlayingAudio) {
+                currentPlayingAudio.pause();
+                currentPlayingAudio.currentTime = 0;
+            }
+
+            // Reset Step 1 Mystery Boxes
+            revealIndex = 0;
+            revealOrder.forEach(item => {
+                const box = document.getElementById(`box-${item}`);
+                const card = document.getElementById(`card-${item}-1`);
+                if (box) box.classList.remove('hidden');
+                if (card) card.classList.add('hidden');
+            });
+
+            const btnReveal = document.getElementById('btn-reveal');
+            if (btnReveal) {
+                btnReveal.disabled = false;
+                btnReveal.classList.remove('opacity-50', 'cursor-not-allowed');
+                btnReveal.innerHTML = '<span>✨</span><span>Lihat Barang</span>';
+            }
+
+            // Reset Highlights Step 2
+            const step2Beg = document.getElementById('step2-card-beg');
+            const step2Buku = document.getElementById('step2-card-buku');
+            if (step2Beg) step2Beg.classList.remove('card-highlight');
+            if (step2Buku) step2Buku.classList.remove('card-highlight');
+
+            // Reset Highlights & Steps Step 3
+            const step3Kipas = document.getElementById('step3-card-kipas');
+            const step3Kerusi = document.getElementById('step3-card-kerusi');
+            if (step3Kipas) step3Kipas.classList.remove('card-highlight');
+            if (step3Kerusi) step3Kerusi.classList.remove('card-highlight');
+
+            const guidedSteps = document.getElementById('guided-steps');
+            if (guidedSteps) guidedSteps.classList.add('hidden');
+
+            // Return to Step 1
+            changeStep(1);
+        }
+
+        // Initialize UI on load
+        window.onload = function() {
+            updateUI();
+        };
+    </script>
+</body>
+</html>

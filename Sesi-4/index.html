@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kedai Bunyi Awal - Sesi 4</title>
+    <!-- Muat turun Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fon Inter yang jelas dan mesra kanak-kanak -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Latar belakang kedai kartun berwarna lembut */
+        .playful-bg {
+            background: linear-gradient(180deg, #f0fdf4 0%, #fefce8 46%, #fef3c7 84%, #fde68a 84.5%, #fef9c3 100%);
+        }
+
+        /* Bumbung kedai kartun lembut di bahagian atas */
+        .shop-awning {
+            background: repeating-linear-gradient(
+                90deg,
+                #86efac 0px,
+                #86efac 38px,
+                #f0fdf4 38px,
+                #f0fdf4 76px
+            );
+            border-bottom: 5px solid #4ade80;
+            border-bottom-left-radius: 18px;
+            border-bottom-right-radius: 18px;
+        }
+
+        /* Gaya penyerlahan kad pesanan, kad pilihan dan padanan */
+        .card-highlight-order {
+            outline: 6px solid #3b82f6 !important;
+            outline-offset: 2px;
+            box-shadow: 0 12px 24px -4px rgba(59, 130, 246, 0.35) !important;
+            transform: scale(1.03);
+        }
+
+        .card-highlight-choice {
+            outline: 6px solid #f59e0b !important;
+            outline-offset: 2px;
+            box-shadow: 0 12px 24px -4px rgba(245, 158, 11, 0.35) !important;
+            transform: scale(1.03);
+        }
+
+        .card-highlight-match {
+            outline: 7px solid #10b981 !important;
+            outline-offset: 3px;
+            box-shadow: 0 16px 32px -4px rgba(16, 185, 129, 0.45) !important;
+            transform: scale(1.05);
+            background-color: #ecfdf5 !important;
+        }
+
+        .card-highlight-nomatch {
+            outline: 6px solid #8b5cf6 !important;
+            outline-offset: 2px;
+            box-shadow: 0 12px 24px -4px rgba(139, 92, 246, 0.35) !important;
+            background-color: #f5f3ff !important;
+        }
+
+        /* Animasi pendek watak beruang kartun (berhenti selepas tindakan selesai) */
+        @keyframes bearWave {
+            0% { transform: rotate(0deg); }
+            20% { transform: rotate(-24deg); }
+            45% { transform: rotate(18deg); }
+            70% { transform: rotate(-16deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes bearNod {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(6px) rotate(5deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(6px) rotate(4deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        @keyframes bearEncourage {
+            0% { transform: translateY(0) scale(1); }
+            30% { transform: translateY(-5px) scale(1.04); }
+            65% { transform: translateY(2px) scale(1.01); }
+            100% { transform: translateY(0) scale(1); }
+        }
+
+        @keyframes bearPoint {
+            0% { transform: rotate(0deg) translateX(0); }
+            30% { transform: rotate(22deg) translateX(6px); }
+            70% { transform: rotate(22deg) translateX(6px); }
+            100% { transform: rotate(0deg) translateX(0); }
+        }
+
+        @keyframes roleSwapSlide {
+            0% { transform: scale(1) rotate(0deg); }
+            40% { transform: scale(0.94) rotate(-2.5deg); }
+            80% { transform: scale(1.03) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        .anim-wave-once {
+            transform-origin: 42px 114px;
+            animation: bearWave 1.1s ease-in-out 1 forwards;
+        }
+
+        .anim-nod-once {
+            transform-origin: 70px 104px;
+            animation: bearNod 0.95s ease-in-out 1 forwards;
+        }
+
+        .anim-encourage-once {
+            transform-origin: 70px 135px;
+            animation: bearEncourage 1s ease-in-out 1 forwards;
+        }
+
+        .anim-point-once {
+            transform-origin: 96px 114px;
+            animation: bearPoint 1.2s ease-in-out 1 forwards;
+        }
+
+        .anim-role-swap-once {
+            animation: roleSwapSlide 0.85s ease-in-out 1 forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            80% { transform: scale(1.04); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .animate-pop {
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800 playful-bg relative overflow-x-hidden">
+
+    <!-- Hiasan Latar Kedai Kartun Lembut (Di luar kawasan kad dan butang) -->
+    <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden" aria-hidden="true">
+        <div class="hidden xl:flex flex-col gap-24 absolute top-28 left-3 opacity-45">
+            <div class="w-24 h-3 bg-emerald-300 rounded-full shadow-sm"></div>
+            <div class="w-20 h-3 bg-emerald-300 rounded-full shadow-sm"></div>
+        </div>
+        <div class="hidden xl:flex flex-col gap-24 absolute top-28 right-3 opacity-45">
+            <div class="w-24 h-3 bg-emerald-300 rounded-full shadow-sm"></div>
+            <div class="w-20 h-3 bg-emerald-300 rounded-full shadow-sm"></div>
+        </div>
+    </div>
+
+    <!-- Header / Tajuk Utama dengan Bumbung Kedai Kartun -->
+    <header class="bg-white/95 backdrop-blur-md border-b-4 border-emerald-400 shadow-sm sticky top-0 z-50">
+        <div class="shop-awning h-3.5 w-full opacity-90"></div>
+        <div class="max-w-7xl mx-auto py-2.5 px-4 md:px-6 flex flex-wrap justify-between items-center gap-2">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 md:w-12 md:h-12 bg-emerald-400 rounded-2xl flex items-center justify-center text-2xl shadow-inner border-2 border-emerald-500 shrink-0">
+                    🐻
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-3xl font-extrabold text-emerald-950 tracking-wide leading-tight">Kedai Bunyi Awal</h1>
+                    <p class="text-xs md:text-sm font-semibold text-emerald-700">Modul Aliterasi • Sesi 4: Pengukuhan Bunyi Awal</p>
+                </div>
+            </div>
+
+            <!-- Kawalan Mula, Bunyi Maklum Balas & Petunjuk 3 Bahagian -->
+            <div class="flex items-center gap-2 md:gap-2.5">
+                <button id="btn-start-welcome" onclick="triggerStartWelcome()" type="button" class="px-3.5 py-1.5 md:px-4 md:py-2 rounded-2xl bg-amber-400 hover:bg-amber-500 text-amber-950 border-b-2 border-amber-600 font-extrabold text-xs md:text-sm flex items-center gap-1.5 transition shadow-sm" title="Mulakan sesi dan sapa murid">
+                    <span>👋</span>
+                    <span>Mula</span>
+                </button>
+
+                <button id="btn-toggle-feedback-sound" onclick="toggleFeedbackSound()" type="button" class="px-3 py-1.5 md:px-3.5 md:py-2 rounded-2xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300 font-bold text-xs md:text-sm flex items-center gap-1.5 transition shadow-sm" title="Hidupkan atau matikan nada dan suara maklum balas">
+                    <span id="feedback-sound-icon">🔔</span>
+                    <span class="hidden sm:inline">Bunyi Maklum Balas:</span>
+                    <span id="feedback-sound-status">Hidup</span>
+                </button>
+
+                <div class="flex items-center gap-1.5 md:gap-2 bg-emerald-50 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border border-emerald-200">
+                    <span id="step-indicator-1" class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs md:text-sm shadow">1</span>
+                    <span class="text-slate-300 font-bold text-xs">—</span>
+                    <span id="step-indicator-2" class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-xs md:text-sm">2</span>
+                    <span class="text-slate-300 font-bold text-xs">—</span>
+                    <span id="step-indicator-3" class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-xs md:text-sm">3</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Kandungan Utama dengan Watak Beruang Kartun di Sisi + Ruang 7 Kad Gambar -->
+    <main class="max-w-[96rem] mx-auto px-3 md:px-6 py-4 flex-grow flex flex-col lg:flex-row items-center lg:items-start justify-center gap-4 lg:gap-6 w-full z-10 relative">
+
+        <!-- PANEL SISI: WATAK BERUANG KARTUN MESRA MEMAKAI APRON HIJAU MUDA -->
+        <aside id="side-shopkeeper-panel" class="w-full lg:w-44 xl:w-52 shrink-0 flex lg:flex-col items-center justify-center gap-3 bg-white/90 backdrop-blur-sm border-2 border-emerald-300 rounded-3xl p-3 shadow-sm lg:sticky lg:top-24">
+            <div class="order-2 lg:order-1 bg-emerald-50 border-2 border-emerald-200 rounded-2xl px-3 py-2 text-center shadow-xs w-full">
+                <p id="shopkeeper-speech" class="text-xs md:text-sm font-extrabold text-emerald-950 leading-snug">Selamat datang ke Kedai Bunyi Awal!</p>
+            </div>
+
+            <div class="order-1 lg:order-2 w-24 h-28 sm:w-28 sm:h-32 lg:w-32 lg:h-36 flex items-center justify-center shrink-0">
+                <svg viewBox="0 0 140 175" class="w-full h-full overflow-visible" aria-label="Watak Beruang Penjaga Kedai Memakai Apron Hijau Muda">
+                    <!-- Badan Beruang & Apron Hijau Muda -->
+                    <g id="bear-body">
+                        <!-- Badan beruang coklat lembut -->
+                        <rect x="40" y="102" width="60" height="56" rx="22" fill="#b47848" stroke="#78350f" stroke-width="2.5"/>
+                        <!-- Tali bahu apron hijau muda -->
+                        <path d="M52 102 L52 113 M88 102 L88 113" stroke="#4ade80" stroke-width="6" stroke-linecap="round"/>
+                        <!-- Apron hijau muda -->
+                        <path d="M47 111 L93 111 L97 158 L43 158 Z" fill="#bbf7d0" stroke="#22c55e" stroke-width="2.5" stroke-linejoin="round"/>
+                        <!-- Poket hadapan apron hijau muda -->
+                        <rect x="57" y="128" width="26" height="18" rx="6" fill="#dcfce7" stroke="#22c55e" stroke-width="2"/>
+                        <!-- Hiasan daun kecil pada poket apron -->
+                        <path d="M66 139 Q70 131 75 135 Q72 142 66 139 Z" fill="#16a34a"/>
+                    </g>
+
+                    <!-- Tangan Kiri Beruang (Untuk Melambai) -->
+                    <g id="bear-arm-left">
+                        <path d="M42 114 Q22 108 16 88" fill="none" stroke="#b47848" stroke-width="13" stroke-linecap="round"/>
+                        <circle cx="15" cy="86" r="8.5" fill="#b47848" stroke="#78350f" stroke-width="2.5"/>
+                        <circle cx="15" cy="86" r="4" fill="#fde68a"/>
+                    </g>
+
+                    <!-- Tangan Kanan Beruang (Untuk Menunjuk ke arah Pilih Semula) -->
+                    <g id="bear-arm-right">
+                        <path d="M98 114 Q116 118 124 130" fill="none" stroke="#b47848" stroke-width="13" stroke-linecap="round"/>
+                        <circle cx="125" cy="131" r="8.5" fill="#b47848" stroke="#78350f" stroke-width="2.5"/>
+                        <circle cx="125" cy="131" r="4" fill="#fde68a"/>
+                    </g>
+
+                    <!-- Kepala & Telinga Beruang -->
+                    <g id="bear-head">
+                        <!-- Telinga Kiri -->
+                        <circle cx="44" cy="48" r="13" fill="#b47848" stroke="#78350f" stroke-width="2.5"/>
+                        <circle cx="44" cy="48" r="6.5" fill="#fde68a"/>
+                        <!-- Telinga Kanan -->
+                        <circle cx="96" cy="48" r="13" fill="#b47848" stroke="#78350f" stroke-width="2.5"/>
+                        <circle cx="96" cy="48" r="6.5" fill="#fde68a"/>
+
+                        <!-- Muka Beruang -->
+                        <ellipse cx="70" cy="76" rx="35" ry="30" fill="#b47848" stroke="#78350f" stroke-width="2.5"/>
+
+                        <!-- Muncung Cerah -->
+                        <ellipse cx="70" cy="84" rx="16" ry="12" fill="#fef3c7"/>
+
+                        <!-- Mata Biasa -->
+                        <g id="face-eyes-normal">
+                            <circle cx="56" cy="71" r="4.2" fill="#1e293b"/>
+                            <circle cx="84" cy="71" r="4.2" fill="#1e293b"/>
+                            <circle cx="57.4" cy="69.5" r="1.4" fill="#ffffff"/>
+                            <circle cx="85.4" cy="69.5" r="1.4" fill="#ffffff"/>
+                        </g>
+
+                        <!-- Mata Gembira (Apabila Padanan Betul) -->
+                        <g id="face-eyes-happy" class="hidden">
+                            <path d="M50 72 Q56 64 62 72" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+                            <path d="M78 72 Q84 64 90 72" fill="none" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- Pipi Merah Jambu Lembut -->
+                        <circle cx="46" cy="80" r="5" fill="#fda4af" opacity="0.75"/>
+                        <circle cx="94" cy="80" r="5" fill="#fda4af" opacity="0.75"/>
+
+                        <!-- Hidung Beruang -->
+                        <ellipse cx="70" cy="80" rx="5.5" ry="3.8" fill="#451a03"/>
+
+                        <!-- Mulut Biasa -->
+                        <path id="face-mouth-normal" d="M63 88 Q70 94 77 88" fill="none" stroke="#451a03" stroke-width="2.5" stroke-linecap="round"/>
+
+                        <!-- Mulut Tersenyum Lebar -->
+                        <path id="face-mouth-happy" class="hidden" d="M60 86 Q70 98 80 86 Z" fill="#fb7185" stroke="#881337" stroke-width="2" stroke-linejoin="round"/>
+                    </g>
+                </svg>
+            </div>
+            <span class="hidden lg:inline-block text-xs font-bold text-emerald-900 bg-emerald-100 px-3 py-1 rounded-full border border-emerald-300">Beruang Penjaga Kedai</span>
+        </aside>
+
+        <!-- RUANG UTAMA KAD GAMBAR & AKTIVITI -->
+        <div class="flex-grow w-full min-w-0">
+
+            <!-- ================= BAHAGIAN 1: INGAT SEMULA ================= -->
+            <section id="step-1" class="step-content space-y-5">
+                <div class="text-center max-w-3xl mx-auto bg-white/85 backdrop-blur-sm p-4 rounded-3xl border-2 border-emerald-200 shadow-sm">
+                    <span class="bg-emerald-400 text-emerald-950 font-bold text-xs md:text-sm px-4 py-1 rounded-full uppercase tracking-wide border border-emerald-500">Bahagian 1</span>
+                    <h2 class="text-2xl md:text-4xl font-bold text-slate-800 mt-2">Ingat Semula</h2>
+                    <p class="text-slate-700 text-base md:text-lg mt-1 font-semibold">Klik gambar atau pembesar suara untuk mendengar nama benda dan sebut bersama-sama.</p>
+                </div>
+
+                <!-- Grid 7 Gambar Tanpa Label Perkataan -->
+                <div id="grid-step-1" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 md:gap-4 items-stretch"></div>
+            </section>
+
+
+            <!-- ================= BAHAGIAN 2: JOM TUNJUK CARA BERMAIN ================= -->
+            <section id="step-2" class="step-content hidden space-y-4">
+                <div class="text-center max-w-4xl mx-auto bg-white/85 backdrop-blur-sm p-3.5 rounded-3xl border-2 border-amber-200 shadow-sm">
+                    <span class="bg-amber-400 text-amber-950 font-bold text-xs md:text-sm px-4 py-1 rounded-full uppercase tracking-wide border border-amber-500">Bahagian 2</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mt-1">Jom Tunjuk Cara Bermain</h2>
+                    <p class="text-slate-600 text-xs md:text-sm mt-1 font-semibold">Pilih <strong>Pesanan</strong> murid dan <strong>Pilihan</strong> padanan, kemudian tekan <strong>Semak Pilihan</strong>. Klik 🔊 <strong>Dengar Sebutan</strong> tanpa menukar pesanan.</p>
+                </div>
+
+                <!-- Baris Empat Watak Murid: Dua Pelanggan & Dua Penjaga Kedai -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-4xl mx-auto">
+                    <!-- Kumpulan 1 -->
+                    <div id="s2-role-left" class="bg-amber-50/95 border-2 border-amber-300 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-3 shadow-xs transition">
+                        <div>
+                            <span id="s2-badge-left" class="bg-amber-400 text-amber-950 font-extrabold text-xs px-3 py-0.5 rounded-full border border-amber-500">🛍️ Dua Pelanggan</span>
+                            <p id="s2-desc-left" class="text-xs font-bold text-amber-900 mt-1">Memilih kad pesanan</p>
+                        </div>
+                        <svg viewBox="0 0 150 75" class="w-28 h-14 shrink-0" aria-label="Dua Watak Murid Kiri">
+                            <rect x="16" y="42" width="32" height="28" rx="10" fill="#fb923c" stroke="#c2410c" stroke-width="2"/>
+                            <circle cx="32" cy="26" r="16" fill="#ffedd5" stroke="#fb923c" stroke-width="2"/>
+                            <path d="M16 23 C16 10, 48 10, 48 23 Z" fill="#1e293b"/>
+                            <circle cx="27" cy="25" r="2.2" fill="#1e293b"/>
+                            <circle cx="37" cy="25" r="2.2" fill="#1e293b"/>
+                            <path d="M27 31 Q32 36 37 31" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+
+                            <rect x="96" y="42" width="32" height="28" rx="10" fill="#facc15" stroke="#a16207" stroke-width="2"/>
+                            <circle cx="112" cy="26" r="16" fill="#ffedd5" stroke="#fb923c" stroke-width="2"/>
+                            <path d="M96 23 C96 10, 128 10, 128 23 Z" fill="#7c2d12"/>
+                            <circle cx="95" cy="22" r="5" fill="#7c2d12"/>
+                            <circle cx="129" cy="22" r="5" fill="#7c2d12"/>
+                            <circle cx="107" cy="25" r="2.2" fill="#1e293b"/>
+                            <circle cx="117" cy="25" r="2.2" fill="#1e293b"/>
+                            <path d="M107 31 Q112 36 117 31" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+
+                    <!-- Kumpulan 2 -->
+                    <div id="s2-role-right" class="bg-sky-50/95 border-2 border-sky-300 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-3 shadow-xs transition">
+                        <div>
+                            <span id="s2-badge-right" class="bg-sky-400 text-sky-950 font-extrabold text-xs px-3 py-0.5 rounded-full border border-sky-500">🏪 Dua Penjaga Kedai</span>
+                            <p id="s2-desc-right" class="text-xs font-bold text-sky-900 mt-1">Mencari kad padanan</p>
+                        </div>
+                        <svg viewBox="0 0 150 75" class="w-28 h-14 shrink-0" aria-label="Dua Watak Murid Kanan">
+                            <rect x="16" y="42" width="32" height="28" rx="10" fill="#38bdf8" stroke="#0369a1" stroke-width="2"/>
+                            <circle cx="32" cy="26" r="16" fill="#ffedd5" stroke="#fb923c" stroke-width="2"/>
+                            <path d="M16 23 C16 10, 48 10, 48 23 Z" fill="#0f172a"/>
+                            <circle cx="27" cy="25" r="2.2" fill="#1e293b"/>
+                            <circle cx="37" cy="25" r="2.2" fill="#1e293b"/>
+                            <path d="M27 31 Q32 36 37 31" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+
+                            <rect x="96" y="42" width="32" height="28" rx="10" fill="#34d399" stroke="#047857" stroke-width="2"/>
+                            <circle cx="112" cy="26" r="16" fill="#ffedd5" stroke="#fb923c" stroke-width="2"/>
+                            <path d="M96 23 C96 10, 128 10, 128 23 Z" fill="#451a03"/>
+                            <circle cx="107" cy="25" r="2.2" fill="#1e293b"/>
+                            <circle cx="117" cy="25" r="2.2" fill="#1e293b"/>
+                            <path d="M107 31 Q112 36 117 31" fill="none" stroke="#9a3412" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Grid 7 Kad Interaktif dengan Kawalan Berasingan -->
+                <div id="grid-step-2" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 md:gap-4 items-stretch"></div>
+
+                <!-- Kawalan Semakan, Tukar Peranan & Pesanan Baharu -->
+                <div class="flex flex-col items-center gap-3 pt-1">
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <button id="btn-check-2" onclick="checkChoiceStep2()" class="px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-extrabold text-base md:text-lg rounded-3xl shadow-md transition border-b-4 border-teal-900 flex items-center gap-2">
+                            <span>✅</span>
+                            <span>Semak Pilihan</span>
+                        </button>
+                        <button id="btn-swap-2" onclick="swapRolesStep2()" class="hidden px-6 py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-extrabold text-base md:text-lg rounded-3xl shadow-md transition border-b-4 border-indigo-900 flex items-center gap-2">
+                            <span>🔁</span>
+                            <span>Tukar Peranan</span>
+                        </button>
+                        <button id="btn-new-order-2" onclick="newOrderStep2()" class="hidden px-6 py-3 bg-amber-400 hover:bg-amber-500 text-amber-950 font-extrabold text-base md:text-lg rounded-3xl shadow-md transition border-b-4 border-amber-700 flex items-center gap-2">
+                            <span>🆕</span>
+                            <span>Pesanan Baharu</span>
+                        </button>
+                    </div>
+
+                    <!-- Kotak Maklum Balas Bahagian 2 -->
+                    <div id="feedback-step-2" class="hidden max-w-2xl w-full bg-white border-2 border-emerald-300 rounded-3xl p-3.5 text-center shadow-sm animate-pop">
+                        <p id="feedback-step-2-text" class="text-lg md:text-2xl font-extrabold text-slate-800"></p>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- ================= BAHAGIAN 3: INGAT SEMULA KAD TANPA PASANGAN ================= -->
+            <section id="step-3" class="step-content hidden space-y-4">
+                <div class="text-center max-w-4xl mx-auto bg-white/85 backdrop-blur-sm p-3.5 rounded-3xl border-2 border-purple-200 shadow-sm">
+                    <span class="bg-purple-400 text-purple-950 font-bold text-xs md:text-sm px-4 py-1 rounded-full uppercase tracking-wide border border-purple-500">Bahagian 3</span>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-800 mt-1">Ingat Semula Kad Tanpa Pasangan</h2>
+                    <p class="text-slate-600 text-xs md:text-sm mt-1 font-semibold">Klik <strong>Semak Kad Meja</strong> atau pilih mana-mana kad secara bebas. Tekan <strong>Tiada Pasangan</strong> atau <strong>Semak Pilihan</strong> untuk menyemak.</p>
+                </div>
+
+                <!-- Grid 7 Kad Interaktif -->
+                <div id="grid-step-3" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 md:gap-4 items-stretch"></div>
+
+                <!-- Butang Tindakan Bahagian 3 -->
+                <div class="flex flex-col items-center gap-3 pt-1">
+                    <div class="flex flex-wrap justify-center gap-3">
+                        <button id="btn-select-meja-3" onclick="selectMejaOrderStep3()" class="px-5 py-3 bg-purple-500 hover:bg-purple-600 text-white font-extrabold text-base md:text-lg rounded-3xl shadow-md transition border-b-4 border-purple-800 flex items-center gap-2">
+                            <span>🪑</span>
+                            <span>Semak Kad Meja</span>
+                        </button>
+                        <button id="btn-nomatch-3" onclick="confirmNoMatchStep3()" class="px-5 py-3 bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-base md:text-lg rounded-3xl shadow-md transition border-b-4 border-sky-800 flex items-center gap-2">
+                            <span>🔍</span>
+                            <span>Tiada Pasangan</span>
+                        </button>
+                        <button id="btn-check-3" onclick="checkChoiceStep3()" class="px-5 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-base md:text-lg rounded-3xl shadow-md transition border-b-4 border-emerald-800 flex items-center gap-2">
+                            <span>✅</span>
+                            <span>Semak Pilihan</span>
+                        </button>
+                        <button id="btn-reselect-3" onclick="reselectStep3()" class="px-5 py-3 bg-amber-400 hover:bg-amber-500 text-amber-950 font-extrabold text-base md:text-lg rounded-3xl shadow-md transition border-b-4 border-amber-700 flex items-center gap-2">
+                            <span>🔄</span>
+                            <span>Pilih Semula</span>
+                        </button>
+                    </div>
+
+                    <!-- Kotak Maklum Balas Bahagian 3 -->
+                    <div id="feedback-step-3" class="hidden max-w-2xl w-full bg-white border-2 border-purple-300 rounded-3xl p-3.5 text-center shadow-sm animate-pop">
+                        <p id="feedback-step-3-text" class="text-lg md:text-2xl font-extrabold text-slate-800"></p>
+                    </div>
+                </div>
+
+                <!-- Peringatan Akhir Permainan -->
+                <div class="bg-emerald-100/90 border-2 border-emerald-300 p-3.5 rounded-3xl shadow-sm text-center max-w-3xl mx-auto">
+                    <p class="text-base md:text-lg font-extrabold text-emerald-950">
+                        📌 Pilih pesanan → Cari pasangan → Semak → Tukar peranan
+                    </p>
+                    <p class="text-sm md:text-base font-bold text-emerald-800 mt-0.5">
+                        Jika tiada pasangan, pilih semula.
+                    </p>
+                </div>
+            </section>
+
+        </div><!-- Tamat Ruang Utama Kad Gambar -->
+    </main>
+
+    <!-- Footer / Navigasi Guru -->
+    <footer class="bg-white/95 backdrop-blur border-t-2 border-slate-200 py-3.5 px-4 md:px-6 shadow-lg z-50 relative">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <button id="btn-back" onclick="changeStep(currentStep - 1)" class="px-5 py-2.5 md:py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-base md:text-lg rounded-2xl transition flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed shadow-sm">
+                <span>⬅️</span>
+                <span>Kembali</span>
+            </button>
+
+            <button onclick="resetApp()" class="px-5 py-2.5 md:py-3 bg-rose-100 hover:bg-rose-200 text-rose-800 font-bold text-base md:text-lg rounded-2xl transition border border-rose-300 flex items-center gap-2 shadow-sm">
+                <span>🔄</span>
+                <span>Mula Semula</span>
+            </button>
+
+            <button id="btn-next" onclick="changeStep(currentStep + 1)" class="px-6 py-2.5 md:py-3 bg-emerald-400 hover:bg-emerald-500 text-emerald-950 font-extrabold text-base md:text-lg rounded-2xl transition flex items-center gap-2 shadow-md border-b-2 border-emerald-600 disabled:opacity-40 disabled:cursor-not-allowed">
+                <span>Seterusnya</span>
+                <span>➡️</span>
+            </button>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // =========================================================================
+        // 1. TETAPAN TUJUH PAUTAN GAMBAR, TUJUH RAKAMAN SEBUTAN & MAKLUM BALAS
+        // =========================================================================
+        const TETAPAN_GAMBAR_DAN_AUDIO = {
+            beg: {
+                gambar: 'https://i.ibb.co/k23rsxLJ/Cheerful-red-school-backpack.png',
+                audio: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795011415/beg.mp3'
+            },
+            buku: {
+                gambar: 'https://i.ibb.co/Q7SvNDP0/Blue-Hardcover-Book.png',
+                audio: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795011415/buku.mp3'
+            },
+            kipas: {
+                gambar: 'https://i.ibb.co/h1dYLPdw/Cheerful-turquoise-tabletop-fan.png',
+                audio: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795011415/kipas.mp3'
+            },
+            kerusi: {
+                gambar: 'https://i.ibb.co/Cp690w42/Cheerful-orange-preschool-chair.png',
+                audio: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795011415/kerusi.mp3'
+            },
+            pensel: {
+                gambar: 'https://i.ibb.co/Zzr89fch/pensel.png',
+                audio: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795101233/pensel.mp3'
+            },
+            pembaris: {
+                gambar: 'https://i.ibb.co/Tx7bcxhk/pembaris.png',
+                audio: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795101232/pembaris.mp3'
+            },
+            meja: {
+                gambar: 'https://i.ibb.co/nNq6K7yb/meja.png',
+                audio: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795069859/meja.mp3'
+            }
+        };
+
+        // Rakaman suara maklum balas
+        const TETAPAN_AUDIO_MAKLUM_BALAS = {
+            yaBetul: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795067961/Ya_betul.mp3',
+            cubaLagi: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795067961/Cuba_lagi.mp3',
+            mariPilihSemula: 'https://res.cloudinary.com/mvtudksw/video/upload/v1795067961/Mari_pilih_semula.mp3'
+        };
+
+        // Senarai 7 item: Beg–buku (/b/), Kipas–kerusi (/k/), Pensel–pembaris (/p/), Meja (/m/ - tiada pasangan)
+        const ITEMS = [
+            {
+                id: 'beg',
+                alt: 'Beg Sekolah',
+                soundGroup: 'b',
+                hasPair: true,
+                image: TETAPAN_GAMBAR_DAN_AUDIO.beg.gambar,
+                fallback: 'https://placehold.co/240x240/ef4444/ffffff?text=Beg',
+                audio: TETAPAN_GAMBAR_DAN_AUDIO.beg.audio
+            },
+            {
+                id: 'buku',
+                alt: 'Buku Biru',
+                soundGroup: 'b',
+                hasPair: true,
+                image: TETAPAN_GAMBAR_DAN_AUDIO.buku.gambar,
+                fallback: 'https://placehold.co/240x240/3b82f6/ffffff?text=Buku',
+                audio: TETAPAN_GAMBAR_DAN_AUDIO.buku.audio
+            },
+            {
+                id: 'kipas',
+                alt: 'Kipas Meja',
+                soundGroup: 'k',
+                hasPair: true,
+                image: TETAPAN_GAMBAR_DAN_AUDIO.kipas.gambar,
+                fallback: 'https://placehold.co/240x240/14b8a6/ffffff?text=Kipas',
+                audio: TETAPAN_GAMBAR_DAN_AUDIO.kipas.audio
+            },
+            {
+                id: 'kerusi',
+                alt: 'Kerusi Oren',
+                soundGroup: 'k',
+                hasPair: true,
+                image: TETAPAN_GAMBAR_DAN_AUDIO.kerusi.gambar,
+                fallback: 'https://placehold.co/240x240/f97316/ffffff?text=Kerusi',
+                audio: TETAPAN_GAMBAR_DAN_AUDIO.kerusi.audio
+            },
+            {
+                id: 'pensel',
+                alt: 'Pensel',
+                soundGroup: 'p',
+                hasPair: true,
+                image: TETAPAN_GAMBAR_DAN_AUDIO.pensel.gambar,
+                fallback: 'https://placehold.co/240x240/eab308/1e293b?text=Pensel',
+                audio: TETAPAN_GAMBAR_DAN_AUDIO.pensel.audio
+            },
+            {
+                id: 'pembaris',
+                alt: 'Pembaris',
+                soundGroup: 'p',
+                hasPair: true,
+                image: TETAPAN_GAMBAR_DAN_AUDIO.pembaris.gambar,
+                fallback: 'https://placehold.co/240x240/10b981/ffffff?text=Pembaris',
+                audio: TETAPAN_GAMBAR_DAN_AUDIO.pembaris.audio
+            },
+            {
+                id: 'meja',
+                alt: 'Meja',
+                soundGroup: 'm',
+                hasPair: false,
+                image: TETAPAN_GAMBAR_DAN_AUDIO.meja.gambar,
+                fallback: 'https://placehold.co/240x240/a855f7/ffffff?text=Meja',
+                audio: TETAPAN_GAMBAR_DAN_AUDIO.meja.audio
+            }
+        ];
+
+        // =========================================================================
+        // 2. PENGURUSAN STATE & AUDIO (SATU AUDIO PADA SATU MASA)
+        // =========================================================================
+        let currentStep = 1;
+        let feedbackSoundEnabled = true;
+
+        // State Bahagian 2 (Jom Tunjuk Cara Bermain)
+        let step2OrderId = null;
+        let step2ChoiceId = null;
+        let step2RolesSwapped = false;
+        let step2WaitingNewOrder = false;
+
+        // State Bahagian 3 (Ingat Semula Kad Tanpa Pasangan)
+        let step3OrderId = 'meja';
+        let step3ChoiceId = null;
+
+        const audioObjects = {};
+        const feedbackAudioObjects = {};
+        let currentPlayingAudio = null;
+        let audioSequenceTimeout = null;
+        let audioCtx = null;
+
+        ITEMS.forEach(item => {
+            const audio = new Audio();
+            if (item.audio && !item.audio.startsWith('PAUTAN_')) {
+                audio.src = item.audio;
+            }
+            audioObjects[item.id] = audio;
+        });
+
+        Object.keys(TETAPAN_AUDIO_MAKLUM_BALAS).forEach(key => {
+            const url = TETAPAN_AUDIO_MAKLUM_BALAS[key];
+            const audio = new Audio();
+            if (url && !url.startsWith('PAUTAN_')) {
+                audio.src = url;
+            }
+            feedbackAudioObjects[key] = audio;
+        });
+
+        function stopAllAudio() {
+            if (audioSequenceTimeout) {
+                clearTimeout(audioSequenceTimeout);
+                audioSequenceTimeout = null;
+            }
+            if (currentPlayingAudio) {
+                currentPlayingAudio.pause();
+                currentPlayingAudio.currentTime = 0;
+                currentPlayingAudio = null;
+            }
+        }
+
+        function playAudio(itemId, event) {
+            if (event) event.stopPropagation();
+            stopAllAudio();
+
+            const targetAudio = audioObjects[itemId];
+            if (targetAudio && targetAudio.src) {
+                targetAudio.currentTime = 0;
+                targetAudio.play().then(() => {
+                    currentPlayingAudio = targetAudio;
+                }).catch(() => {
+                    console.log(`Rakaman untuk '${itemId}' belum tersedia. Guru menyebut perkataan secara lisan.`);
+                });
+            }
+        }
+
+        function playSoftTone(type) {
+            if (!feedbackSoundEnabled) return;
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextClass) return;
+                if (!audioCtx) audioCtx = new AudioContextClass();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const now = audioCtx.currentTime;
+                if (type === 'bell') {
+                    const notes = [587.33, 880];
+                    notes.forEach((freq, idx) => {
+                        const osc = audioCtx.createOscillator();
+                        const gain = audioCtx.createGain();
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+                        gain.gain.setValueAtTime(0.001, now + idx * 0.12);
+                        gain.gain.exponentialRampToValueAtTime(0.13, now + idx * 0.12 + 0.03);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.12 + 0.42);
+                        osc.connect(gain);
+                        gain.connect(audioCtx.destination);
+                        osc.start(now + idx * 0.12);
+                        osc.stop(now + idx * 0.12 + 0.45);
+                    });
+                } else {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(440, now);
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.exponentialRampToValueAtTime(0.1, now + 0.03);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.3);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.32);
+                }
+            } catch (e) {}
+        }
+
+        function playFeedbackSequence(toneType, feedbackKey) {
+            stopAllAudio();
+            if (!feedbackSoundEnabled) return;
+
+            playSoftTone(toneType);
+            const targetAudio = feedbackAudioObjects[feedbackKey];
+            if (targetAudio && targetAudio.src) {
+                const delay = toneType === 'bell' ? 480 : 350;
+                audioSequenceTimeout = setTimeout(() => {
+                    if (!feedbackSoundEnabled) return;
+                    targetAudio.currentTime = 0;
+                    targetAudio.play().then(() => {
+                        currentPlayingAudio = targetAudio;
+                    }).catch(() => {
+                        console.log(`Rakaman maklum balas '${feedbackKey}' belum tersedia.`);
+                    });
+                }, delay);
+            }
+        }
+
+        function toggleFeedbackSound() {
+            feedbackSoundEnabled = !feedbackSoundEnabled;
+            const btn = document.getElementById('btn-toggle-feedback-sound');
+            const icon = document.getElementById('feedback-sound-icon');
+            const status = document.getElementById('feedback-sound-status');
+
+            if (feedbackSoundEnabled) {
+                icon.textContent = '🔔';
+                status.textContent = 'Hidup';
+                btn.className = 'px-3 py-1.5 md:px-3.5 md:py-2 rounded-2xl bg-emerald-100 hover:bg-emerald-200 text-emerald-900 border border-emerald-300 font-bold text-xs md:text-sm flex items-center gap-1.5 transition shadow-sm';
+            } else {
+                if (Object.values(feedbackAudioObjects).includes(currentPlayingAudio)) {
+                    stopAllAudio();
+                }
+                icon.textContent = '🔕';
+                status.textContent = 'Mati';
+                btn.className = 'px-3 py-1.5 md:px-3.5 md:py-2 rounded-2xl bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-bold text-xs md:text-sm flex items-center gap-1.5 transition shadow-sm';
+            }
+        }
+
+        function getImgSrc(item) {
+            if (!item.image || item.image.startsWith('PAUTAN_')) {
+                return item.fallback;
+            }
+            return item.image;
+        }
+
+        // =========================================================================
+        // 3. ANIMASI WATAK BERUANG PENJAGA KEDAI SISI
+        // =========================================================================
+        let shopkeeperResetTimer = null;
+
+        function setShopkeeperState(state, speechText) {
+            const head = document.getElementById('bear-head');
+            const body = document.getElementById('bear-body');
+            const armLeft = document.getElementById('bear-arm-left');
+            const armRight = document.getElementById('bear-arm-right');
+            const eyesNormal = document.getElementById('face-eyes-normal');
+            const eyesHappy = document.getElementById('face-eyes-happy');
+            const mouthNormal = document.getElementById('face-mouth-normal');
+            const mouthHappy = document.getElementById('face-mouth-happy');
+            const speechEl = document.getElementById('shopkeeper-speech');
+
+            if (!head) return;
+            if (shopkeeperResetTimer) {
+                clearTimeout(shopkeeperResetTimer);
+                shopkeeperResetTimer = null;
+            }
+
+            [head, body, armLeft, armRight].forEach(el => {
+                if (el) {
+                    el.classList.remove('anim-wave-once', 'anim-nod-once', 'anim-encourage-once', 'anim-point-once');
+                    void el.offsetWidth;
+                }
+            });
+
+            eyesNormal.classList.remove('hidden');
+            eyesHappy.classList.add('hidden');
+            mouthNormal.classList.remove('hidden');
+            mouthHappy.classList.add('hidden');
+
+            if (speechText && speechEl) {
+                speechEl.textContent = speechText;
+            }
+
+            if (state === 'wave') {
+                armLeft.classList.add('anim-wave-once');
+            } else if (state === 'correct') {
+                eyesNormal.classList.add('hidden');
+                eyesHappy.classList.remove('hidden');
+                mouthNormal.classList.add('hidden');
+                mouthHappy.classList.remove('hidden');
+                head.classList.add('anim-nod-once');
+            } else if (state === 'encourage') {
+                body.classList.add('anim-encourage-once');
+                head.classList.add('anim-encourage-once');
+            } else if (state === 'point') {
+                armRight.classList.add('anim-point-once');
+            }
+
+            if (state !== 'idle') {
+                shopkeeperResetTimer = setTimeout(() => {
+                    eyesNormal.classList.remove('hidden');
+                    eyesHappy.classList.add('hidden');
+                    mouthNormal.classList.remove('hidden');
+                    mouthHappy.classList.add('hidden');
+                    [head, body, armLeft, armRight].forEach(el => {
+                        if (el) el.classList.remove('anim-wave-once', 'anim-nod-once', 'anim-encourage-once', 'anim-point-once');
+                    });
+                }, 1400);
+            }
+        }
+
+        function triggerStartWelcome() {
+            stopAllAudio();
+            setShopkeeperState('wave', 'Hai! Jom kukuhkan bunyi awal bersama Beruang!');
+        }
+
+        // =========================================================================
+        // 4. PEMBINAAN PAPARAN SETIAP BAHAGIAN
+        // =========================================================================
+
+        // --- BAHAGIAN 1: INGAT SEMULA (7 GAMBAR TANPA LABEL) ---
+        function renderStep1() {
+            const container = document.getElementById('grid-step-1');
+            container.innerHTML = '';
+
+            ITEMS.forEach(item => {
+                container.innerHTML += `
+                    <div onclick="playAudio('${item.id}')" class="w-full min-h-[225px] bg-white border-4 border-emerald-300 rounded-3xl p-3.5 flex flex-col items-center justify-between shadow-md cursor-pointer transition hover:scale-105 group">
+                        <div class="w-full h-36 md:h-40 flex items-center justify-center overflow-hidden">
+                            <img src="${getImgSrc(item)}" alt="${item.alt}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition" onerror="this.onerror=null; this.src='${item.fallback}';">
+                        </div>
+                        <button type="button" class="w-full py-2 bg-emerald-100 group-hover:bg-emerald-300 text-emerald-950 rounded-2xl flex items-center justify-center gap-2 font-bold text-sm md:text-base transition border border-emerald-300 mt-2">
+                            <span>🔊</span>
+                            <span>Dengar Sebutan</span>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        // --- BAHAGIAN 2: JOM TUNJUK CARA BERMAIN ---
+        function renderRoleHeaderStep2() {
+            const leftBox = document.getElementById('s2-role-left');
+            const rightBox = document.getElementById('s2-role-right');
+            const leftBadge = document.getElementById('s2-badge-left');
+            const rightBadge = document.getElementById('s2-badge-right');
+            const leftDesc = document.getElementById('s2-desc-left');
+            const rightDesc = document.getElementById('s2-desc-right');
+
+            if (!step2RolesSwapped) {
+                leftBox.className = 'bg-amber-50/95 border-2 border-amber-300 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-3 shadow-xs transition';
+                leftBadge.className = 'bg-amber-400 text-amber-950 font-extrabold text-xs px-3 py-0.5 rounded-full border border-amber-500';
+                leftBadge.textContent = '🛍️ Dua Pelanggan (Kumpulan 1)';
+                leftDesc.textContent = 'Memilih kad pesanan';
+
+                rightBox.className = 'bg-sky-50/95 border-2 border-sky-300 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-3 shadow-xs transition';
+                rightBadge.className = 'bg-sky-400 text-sky-950 font-extrabold text-xs px-3 py-0.5 rounded-full border border-sky-500';
+                rightBadge.textContent = '🏪 Dua Penjaga Kedai (Kumpulan 2)';
+                rightDesc.textContent = 'Mencari kad padanan';
+            } else {
+                leftBox.className = 'bg-sky-50/95 border-2 border-sky-300 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-3 shadow-xs transition';
+                leftBadge.className = 'bg-sky-400 text-sky-950 font-extrabold text-xs px-3 py-0.5 rounded-full border border-sky-500';
+                leftBadge.textContent = '🏪 Dua Penjaga Kedai (Kumpulan 1)';
+                leftDesc.textContent = 'Giliran mencari kad padanan';
+
+                rightBox.className = 'bg-amber-50/95 border-2 border-amber-300 rounded-2xl px-4 py-2.5 flex items-center justify-between gap-3 shadow-xs transition';
+                rightBadge.className = 'bg-amber-400 text-amber-950 font-extrabold text-xs px-3 py-0.5 rounded-full border border-amber-500';
+                rightBadge.textContent = '🛍️ Dua Pelanggan (Kumpulan 2)';
+                rightDesc.textContent = 'Giliran memilih kad pesanan';
+            }
+        }
+
+        function renderStep2() {
+            renderRoleHeaderStep2();
+            const container = document.getElementById('grid-step-2');
+            container.innerHTML = '';
+
+            ITEMS.forEach(item => {
+                const isOrder = item.id === step2OrderId;
+                const isChoice = item.id === step2ChoiceId;
+
+                let badgeHtml = '';
+                let cardHighlight = '';
+
+                if (isOrder) {
+                    badgeHtml = `<span class="absolute -top-3 bg-blue-600 text-white font-bold text-xs px-3 py-0.5 rounded-full border-2 border-white shadow">📋 Kad Pesanan</span>`;
+                    cardHighlight = 'card-highlight-order';
+                } else if (isChoice) {
+                    badgeHtml = `<span class="absolute -top-3 bg-amber-500 text-amber-950 font-bold text-xs px-3 py-0.5 rounded-full border-2 border-white shadow">👆 Kad Pilihan</span>`;
+                    cardHighlight = 'card-highlight-choice';
+                }
+
+                const orderBtnStyle = isOrder
+                    ? 'bg-blue-600 text-white border-blue-700'
+                    : 'bg-blue-50 hover:bg-blue-100 text-blue-900 border-blue-300';
+
+                const choiceBtnStyle = isChoice
+                    ? 'bg-amber-400 text-amber-950 border-amber-500'
+                    : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300';
+
+                container.innerHTML += `
+                    <div id="step2-card-${item.id}" class="relative w-full bg-white border-4 border-slate-200 rounded-3xl p-3 flex flex-col items-center justify-between shadow-md transition ${cardHighlight}">
+                        ${badgeHtml}
+                        <div onclick="playAudio('${item.id}', event)" class="w-full h-32 md:h-36 flex items-center justify-center overflow-hidden mt-1 cursor-pointer group">
+                            <img src="${getImgSrc(item)}" alt="${item.alt}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition" onerror="this.onerror=null; this.src='${item.fallback}';">
+                        </div>
+
+                        <div class="w-full space-y-1.5 mt-2">
+                            <button type="button" onclick="playAudio('${item.id}', event)" class="w-full py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl flex items-center justify-center gap-1.5 font-bold text-xs md:text-sm transition border border-slate-300">
+                                <span>🔊</span>
+                                <span>Dengar Sebutan</span>
+                            </button>
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <button type="button" onclick="setStep2Order('${item.id}')" ${step2WaitingNewOrder ? 'disabled' : ''} class="py-1.5 px-1 rounded-xl font-bold text-xs border transition ${orderBtnStyle} ${step2WaitingNewOrder ? 'opacity-40 cursor-not-allowed' : ''}">
+                                    📋 Pesanan
+                                </button>
+                                <button type="button" onclick="setStep2Choice('${item.id}')" ${isOrder || step2WaitingNewOrder ? 'disabled' : ''} class="py-1.5 px-1 rounded-xl font-bold text-xs border transition ${choiceBtnStyle} ${isOrder || step2WaitingNewOrder ? 'opacity-40 cursor-not-allowed' : ''}">
+                                    👆 Pilihan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function setStep2Order(itemId) {
+            if (step2WaitingNewOrder) return;
+            step2OrderId = (step2OrderId === itemId) ? null : itemId;
+            if (step2ChoiceId === itemId) step2ChoiceId = null;
+            hideFeedbackStep2();
+            renderStep2();
+        }
+
+        function setStep2Choice(itemId) {
+            if (step2WaitingNewOrder || itemId === step2OrderId) return;
+            step2ChoiceId = (step2ChoiceId === itemId) ? null : itemId;
+            hideFeedbackStep2();
+            renderStep2();
+        }
+
+        function hideFeedbackStep2() {
+            const box = document.getElementById('feedback-step-2');
+            const btnSwap = document.getElementById('btn-swap-2');
+            const btnNew = document.getElementById('btn-new-order-2');
+            if (box) box.classList.add('hidden');
+            if (btnSwap) btnSwap.classList.add('hidden');
+            if (btnNew) btnNew.classList.add('hidden');
+
+            document.querySelectorAll('#grid-step-2 > div').forEach(card => {
+                card.classList.remove('card-highlight-match');
+            });
+        }
+
+        function showFeedbackStep2(message, toneClass, showSwap = false, showNewOrder = false) {
+            const box = document.getElementById('feedback-step-2');
+            const text = document.getElementById('feedback-step-2-text');
+            const btnSwap = document.getElementById('btn-swap-2');
+            const btnNew = document.getElementById('btn-new-order-2');
+
+            box.className = `max-w-2xl w-full border-2 rounded-3xl p-3.5 text-center shadow-sm animate-pop ${toneClass}`;
+            text.textContent = message;
+            box.classList.remove('hidden');
+
+            if (showSwap) btnSwap.classList.remove('hidden');
+            else btnSwap.classList.add('hidden');
+
+            if (showNewOrder) btnNew.classList.remove('hidden');
+            else btnNew.classList.add('hidden');
+        }
+
+        function checkChoiceStep2() {
+            stopAllAudio();
+            if (!step2OrderId || !step2ChoiceId || step2OrderId === step2ChoiceId) {
+                showFeedbackStep2('Sila pilih dua kad berbeza (Pesanan dan Pilihan) dahulu.', 'bg-blue-50 border-blue-300 text-blue-950', false, false);
+                return;
+            }
+
+            const orderItem = ITEMS.find(i => i.id === step2OrderId);
+            const choiceItem = ITEMS.find(i => i.id === step2ChoiceId);
+
+            if (orderItem && choiceItem && orderItem.soundGroup === choiceItem.soundGroup) {
+                const c1 = document.getElementById(`step2-card-${orderItem.id}`);
+                const c2 = document.getElementById(`step2-card-${choiceItem.id}`);
+                if (c1) c1.classList.add('card-highlight-match');
+                if (c2) c2.classList.add('card-highlight-match');
+
+                setShopkeeperState('correct', 'Ya, betul! Bunyi awalnya sama!');
+                playFeedbackSequence('bell', 'yaBetul');
+                showFeedbackStep2('Ya, betul!', 'bg-emerald-50 border-emerald-400 text-emerald-950', true, false);
+            } else {
+                // Kekalkan kad pesanan dan benarkan murid memilih padanan semula
+                step2ChoiceId = null;
+                renderStep2();
+                setShopkeeperState('encourage', 'Cuba lagi. Pilih padanan yang bermula dengan bunyi yang sama.');
+                playFeedbackSequence('gentle', 'cubaLagi');
+                showFeedbackStep2('Cuba lagi.', 'bg-amber-50 border-amber-300 text-amber-950', false, false);
+            }
+        }
+
+        function swapRolesStep2() {
+            stopAllAudio();
+            step2OrderId = null;
+            step2ChoiceId = null;
+            step2RolesSwapped = !step2RolesSwapped;
+            step2WaitingNewOrder = true;
+
+            const leftBox = document.getElementById('s2-role-left');
+            const rightBox = document.getElementById('s2-role-right');
+            [leftBox, rightBox].forEach(el => {
+                if (el) {
+                    el.classList.remove('anim-role-swap-once');
+                    void el.offsetWidth;
+                    el.classList.add('anim-role-swap-once');
+                }
+            });
+
+            renderStep2();
+            setShopkeeperState('wave', 'Peranan telah ditukar! Tekan Pesanan Baharu untuk giliran seterusnya.');
+            showFeedbackStep2('Semua kad dipulangkan dan peranan ditukar. Tekan Pesanan Baharu.', 'bg-indigo-50 border-indigo-300 text-indigo-950', false, true);
+        }
+
+        function newOrderStep2() {
+            stopAllAudio();
+            step2OrderId = null;
+            step2ChoiceId = null;
+            step2WaitingNewOrder = false;
+            hideFeedbackStep2();
+            renderStep2();
+            setShopkeeperState('idle', 'Sedia untuk giliran seterusnya!');
+        }
+
+        // --- BAHAGIAN 3: INGAT SEMULA KAD TANPA PASANGAN ---
+        function renderStep3() {
+            const container = document.getElementById('grid-step-3');
+            container.innerHTML = '';
+
+            ITEMS.forEach(item => {
+                const isOrder = item.id === step3OrderId;
+                const isChoice = item.id === step3ChoiceId;
+
+                let badgeHtml = '';
+                let cardHighlight = '';
+
+                if (isOrder) {
+                    badgeHtml = `<span class="absolute -top-3 bg-purple-600 text-white font-bold text-xs px-3 py-0.5 rounded-full border-2 border-white shadow">📋 Kad Pesanan</span>`;
+                    cardHighlight = 'card-highlight-order';
+                } else if (isChoice) {
+                    badgeHtml = `<span class="absolute -top-3 bg-amber-500 text-amber-950 font-bold text-xs px-3 py-0.5 rounded-full border-2 border-white shadow">👆 Kad Pilihan</span>`;
+                    cardHighlight = 'card-highlight-choice';
+                }
+
+                const orderBtnStyle = isOrder
+                    ? 'bg-purple-600 text-white border-purple-700'
+                    : 'bg-purple-50 hover:bg-purple-100 text-purple-900 border-purple-300';
+
+                const choiceBtnStyle = isChoice
+                    ? 'bg-amber-400 text-amber-950 border-amber-500'
+                    : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300';
+
+                container.innerHTML += `
+                    <div id="step3-card-${item.id}" class="relative w-full bg-white border-4 border-slate-200 rounded-3xl p-3 flex flex-col items-center justify-between shadow-md transition ${cardHighlight}">
+                        ${badgeHtml}
+                        <div onclick="playAudio('${item.id}', event)" class="w-full h-32 md:h-36 flex items-center justify-center overflow-hidden mt-1 cursor-pointer group">
+                            <img src="${getImgSrc(item)}" alt="${item.alt}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition" onerror="this.onerror=null; this.src='${item.fallback}';">
+                        </div>
+
+                        <div class="w-full space-y-1.5 mt-2">
+                            <button type="button" onclick="playAudio('${item.id}', event)" class="w-full py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl flex items-center justify-center gap-1.5 font-bold text-xs md:text-sm transition border border-slate-300">
+                                <span>🔊</span>
+                                <span>Dengar Sebutan</span>
+                            </button>
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <button type="button" onclick="setStep3Order('${item.id}')" class="py-1.5 px-1 rounded-xl font-bold text-xs border transition ${orderBtnStyle}">
+                                    📋 Pesanan
+                                </button>
+                                <button type="button" onclick="setStep3Choice('${item.id}')" ${isOrder ? 'disabled' : ''} class="py-1.5 px-1 rounded-xl font-bold text-xs border transition ${choiceBtnStyle} ${isOrder ? 'opacity-40 cursor-not-allowed' : ''}">
+                                    👆 Pilihan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function setStep3Order(itemId) {
+            step3OrderId = (step3OrderId === itemId) ? null : itemId;
+            if (step3ChoiceId === itemId) step3ChoiceId = null;
+            hideFeedbackStep3();
+            renderStep3();
+        }
+
+        function setStep3Choice(itemId) {
+            if (itemId === step3OrderId) return;
+            step3ChoiceId = (step3ChoiceId === itemId) ? null : itemId;
+            hideFeedbackStep3();
+            renderStep3();
+        }
+
+        function selectMejaOrderStep3() {
+            stopAllAudio();
+            step3OrderId = 'meja';
+            step3ChoiceId = null;
+            hideFeedbackStep3();
+            renderStep3();
+            playAudio('meja');
+            setShopkeeperState('idle', 'Kad meja dipilih. Cuba dengar bunyi awalnya.');
+        }
+
+        function hideFeedbackStep3() {
+            const box = document.getElementById('feedback-step-3');
+            if (box) box.classList.add('hidden');
+            document.querySelectorAll('#grid-step-3 > div').forEach(card => {
+                card.classList.remove('card-highlight-match', 'card-highlight-nomatch');
+            });
+        }
+
+        function showFeedbackStep3(message, toneClass) {
+            const box = document.getElementById('feedback-step-3');
+            const text = document.getElementById('feedback-step-3-text');
+            box.className = `max-w-2xl w-full border-2 rounded-3xl p-3.5 text-center shadow-sm animate-pop ${toneClass}`;
+            text.textContent = message;
+            box.classList.remove('hidden');
+        }
+
+        function confirmNoMatchStep3() {
+            stopAllAudio();
+            if (!step3OrderId) {
+                showFeedbackStep3('Sila pilih satu kad Pesanan dahulu.', 'bg-blue-50 border-blue-300 text-blue-950');
+                return;
+            }
+
+            const orderItem = ITEMS.find(i => i.id === step3OrderId);
+            if (orderItem && !orderItem.hasPair) {
+                const mejaCard = document.getElementById(`step3-card-${orderItem.id}`);
+                if (mejaCard) mejaCard.classList.add('card-highlight-nomatch');
+
+                setShopkeeperState('point', 'Meja tiada pasangan dalam set ini. Mari pilih semula.');
+                playFeedbackSequence('gentle', 'mariPilihSemula');
+                showFeedbackStep3('Meja tiada pasangan dalam set ini.', 'bg-purple-50 border-purple-400 text-purple-950');
+            } else {
+                // Jika ditekan untuk kad yang mempunyai pasangan, mainkan “Cuba lagi.”
+                setShopkeeperState('encourage', 'Cuba lagi. Kad ini ada pasangan!');
+                playFeedbackSequence('gentle', 'cubaLagi');
+                showFeedbackStep3('Cuba lagi.', 'bg-amber-50 border-amber-300 text-amber-950');
+            }
+        }
+
+        function checkChoiceStep3() {
+            stopAllAudio();
+            if (!step3OrderId) {
+                showFeedbackStep3('Sila pilih satu kad Pesanan dahulu.', 'bg-blue-50 border-blue-300 text-blue-950');
+                return;
+            }
+            if (!step3ChoiceId) {
+                showFeedbackStep3('Sila pilih satu kad Pilihan dahulu.', 'bg-amber-50 border-amber-300 text-amber-950');
+                return;
+            }
+
+            const orderItem = ITEMS.find(i => i.id === step3OrderId);
+            const choiceItem = ITEMS.find(i => i.id === step3ChoiceId);
+
+            if (orderItem && choiceItem && orderItem.soundGroup === choiceItem.soundGroup) {
+                const c1 = document.getElementById(`step3-card-${orderItem.id}`);
+                const c2 = document.getElementById(`step3-card-${choiceItem.id}`);
+                if (c1) c1.classList.add('card-highlight-match');
+                if (c2) c2.classList.add('card-highlight-match');
+
+                setShopkeeperState('correct', 'Ya, betul! Bunyi awalnya sama!');
+                playFeedbackSequence('bell', 'yaBetul');
+                showFeedbackStep3('Ya, betul!', 'bg-emerald-50 border-emerald-400 text-emerald-950');
+            } else {
+                // Jika murid mencadangkan padanan untuk meja atau padanan tidak tepat, mainkan “Cuba lagi.”
+                step3ChoiceId = null;
+                renderStep3();
+                setShopkeeperState('encourage', 'Cuba lagi. Dengar bunyi awalnya dengan teliti.');
+                playFeedbackSequence('gentle', 'cubaLagi');
+                showFeedbackStep3('Cuba lagi.', 'bg-amber-50 border-amber-300 text-amber-950');
+            }
+        }
+
+        function reselectStep3() {
+            stopAllAudio();
+            step3OrderId = null;
+            step3ChoiceId = null;
+            hideFeedbackStep3();
+            renderStep3();
+            setShopkeeperState('idle', 'Sila pilih kad pesanan baharu!');
+        }
+
+        // =========================================================================
+        // 5. NAVIGASI & TETAPAN SEMULA
+        // =========================================================================
+        function changeStep(newStep) {
+            if (newStep < 1 || newStep > 3) return;
+            stopAllAudio();
+
+            document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`step-${newStep}`).classList.remove('hidden');
+
+            currentStep = newStep;
+            updateUI();
+        }
+
+        function updateUI() {
+            const btnBack = document.getElementById('btn-back');
+            const btnNext = document.getElementById('btn-next');
+
+            btnBack.disabled = (currentStep === 1);
+            btnNext.disabled = (currentStep === 3);
+
+            for (let i = 1; i <= 3; i++) {
+                const indicator = document.getElementById(`step-indicator-${i}`);
+                if (i === currentStep) {
+                    indicator.className = "w-7 h-7 md:w-8 md:h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs md:text-sm shadow ring-2 ring-emerald-300";
+                } else if (i < currentStep) {
+                    indicator.className = "w-7 h-7 md:w-8 md:h-8 rounded-full bg-amber-400 text-amber-950 font-bold flex items-center justify-center text-xs md:text-sm";
+                } else {
+                    indicator.className = "w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-200 text-slate-500 font-bold flex items-center justify-center text-xs md:text-sm";
+                }
+            }
+        }
+
+        function resetApp() {
+            stopAllAudio();
+
+            renderStep1();
+
+            step2OrderId = null;
+            step2ChoiceId = null;
+            step2RolesSwapped = false;
+            step2WaitingNewOrder = false;
+            hideFeedbackStep2();
+            renderStep2();
+
+            step3OrderId = 'meja';
+            step3ChoiceId = null;
+            hideFeedbackStep3();
+            renderStep3();
+
+            changeStep(1);
+            setShopkeeperState('wave', 'Selamat datang ke Kedai Bunyi Awal!');
+        }
+
+        window.onload = function() {
+            renderStep1();
+            renderStep2();
+            renderStep3();
+            updateUI();
+            setShopkeeperState('wave', 'Selamat datang ke Kedai Bunyi Awal!');
+        };
+    </script>
+</body>
+</html>
